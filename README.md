@@ -10,7 +10,7 @@ pip install -e .
 ```
 
 ## Usage
-Check the examples in `tests` to understand how to use the library. We provide the following Python functions:
+Check the examples in `run_hest_test.cc` and `run_hest_test.py` to understand how to use the library. We provide the following Python functions:
 - `ransac_point_homography`: homography estimation from a minimal set of 4 points.
 - `ransac_line_homography`: homography estimation from a minimal set of 4 lines.
 - `ransac_point_line_homography`: homography estimation with hybrid RANSAC from minimal sets of 4 points or 4 lines.
