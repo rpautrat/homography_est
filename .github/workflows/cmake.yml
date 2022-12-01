@@ -7,10 +7,17 @@ env:
 
 jobs:
   build:
-    runs-on: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get remove libunwind-14-dev
+        sudo apt-get install -y libceres-dev libeigen3-dev
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
@@ -20,4 +27,4 @@ jobs:
 
     - name: Test
       working-directory: ${{github.workspace}}/build
-      run: ./all_tests # ctest -C ${{env.BUILD_TYPE}}
+      run: ${{github.workspace}}/build/all_tests # ctest -C ${{env.BUILD_TYPE}}

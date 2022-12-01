@@ -4,6 +4,17 @@
 #include "RansacLib/hybrid_ransac.h"
 #include "Estimators.h"
 
+// Make the library work with any ceres version
+#if (CERES_VERSION_MAJOR >= 2) && (CERES_VERSION_MINOR > 0)
+#define SET_PARAMETRIZATION(problem, vals, param) (problem).SetManifold((vals), (param))
+#define NEW_HEST_PARAMETRIZATION (new ceres::SphereManifold<9>())
+#define NEW_ROT_PARAMETRIZATION (new ceres::EigenQuaternionManifold())
+#else
+#define SET_PARAMETRIZATION(problem, vals, param) (problem).SetParameterization((vals), (param))
+#define NEW_HEST_PARAMETRIZATION (new ceres::HomogeneousVectorParameterization(9))
+#define NEW_ROT_PARAMETRIZATION (new ceres::EigenQuaternionParameterization())
+#endif
+
 namespace hest {
 
 Eigen::Matrix3d estimateHomographyLines(
@@ -219,15 +230,15 @@ void refineHomography(
         q = Eigen::Quaterniond(homography);
         for(size_t k = 0; k < line_segments1.size(); ++k) {
             ceres::CostFunction *cost_function = RotationLineCost::Create(line_segments1[k], line_segments2[k]);
-            problem.AddResidualBlock(cost_function, nullptr, q.coeffs().data());            
+            problem.AddResidualBlock(cost_function, nullptr, q.coeffs().data());
         }
-        problem.SetManifold(q.coeffs().data(), new ceres::EigenQuaternionManifold());
+        SET_PARAMETRIZATION(problem, q.coeffs().data(), NEW_ROT_PARAMETRIZATION);
     } else {
         for(size_t k = 0; k < line_segments1.size(); ++k) {
             ceres::CostFunction *cost_function = HomographyLineCost::Create(line_segments1[k], line_segments2[k]);
-            problem.AddResidualBlock(cost_function, nullptr, homography.data());            
+            problem.AddResidualBlock(cost_function, nullptr, homography.data());
         }
-        problem.SetManifold(homography.data(), new ceres::SphereManifold<9>());
+        SET_PARAMETRIZATION(problem, homography.data(), NEW_HEST_PARAMETRIZATION);
     }
     ceres::Solver::Options options;
     options.minimizer_progress_to_stdout = false;
@@ -260,16 +271,16 @@ void refineHomography(
         q = Eigen::Quaterniond(homography);
         for(size_t k = 0; k < pts1.size(); ++k) {
             ceres::CostFunction *cost_function = RotationPointCost::Create(pts1[k], pts2[k]);
-            problem.AddResidualBlock(cost_function, nullptr, q.coeffs().data());            
+            problem.AddResidualBlock(cost_function, nullptr, q.coeffs().data());
         }
-        problem.SetManifold(q.coeffs().data(), new ceres::EigenQuaternionManifold());
-    } else {
+        SET_PARAMETRIZATION(problem, q.coeffs().data(), NEW_ROT_PARAMETRIZATION);
+      } else {
         for(size_t k = 0; k < pts1.size(); ++k) {
             ceres::CostFunction *cost_function = HomographyPointCost::Create(pts1[k], pts2[k]);
-            problem.AddResidualBlock(cost_function, nullptr, homography.data());            
+            problem.AddResidualBlock(cost_function, nullptr, homography.data());
         }
-        problem.SetManifold(homography.data(), new ceres::SphereManifold<9>());
-    }
+        SET_PARAMETRIZATION(problem, homography.data(), NEW_HEST_PARAMETRIZATION);
+      }
 
     ceres::Solver::Options options;
     options.minimizer_progress_to_stdout = false;
@@ -305,23 +316,23 @@ void refineHomography(
         q = Eigen::Quaterniond(homography);
         for(size_t k = 0; k < pts1.size(); ++k) {
             ceres::CostFunction *cost_function = RotationPointCost::Create(pts1[k], pts2[k]);
-            problem.AddResidualBlock(cost_function, nullptr, q.coeffs().data());            
+            problem.AddResidualBlock(cost_function, nullptr, q.coeffs().data());
         }
         for(size_t k = 0; k < line_segments1.size(); ++k) {
             ceres::CostFunction *cost_function = RotationLineCost::Create(line_segments1[k], line_segments2[k]);
-            problem.AddResidualBlock(cost_function, nullptr, q.coeffs().data());            
+            problem.AddResidualBlock(cost_function, nullptr, q.coeffs().data());
         }
-        problem.SetManifold(q.coeffs().data(), new ceres::EigenQuaternionManifold());
+        SET_PARAMETRIZATION(problem, q.coeffs().data(), NEW_ROT_PARAMETRIZATION);
     } else {
         for(size_t k = 0; k < pts1.size(); ++k) {
             ceres::CostFunction *cost_function = HomographyPointCost::Create(pts1[k], pts2[k]);
-            problem.AddResidualBlock(cost_function, nullptr, homography.data());            
+            problem.AddResidualBlock(cost_function, nullptr, homography.data());
         }
         for(size_t k = 0; k < line_segments1.size(); ++k) {
             ceres::CostFunction *cost_function = HomographyLineCost::Create(line_segments1[k], line_segments1[k]);
-            problem.AddResidualBlock(cost_function, nullptr, homography.data());            
+            problem.AddResidualBlock(cost_function, nullptr, homography.data());
         }
-        problem.SetManifold(homography.data(), new ceres::SphereManifold<9>());
+        SET_PARAMETRIZATION(problem, homography.data(), NEW_HEST_PARAMETRIZATION);
     }
     ceres::Solver::Options options;
     options.minimizer_progress_to_stdout = false;
