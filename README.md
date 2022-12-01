@@ -1,4 +1,6 @@
 # homography_est
+[![Build](https://github.com/rpautrat/homography_est/actions/workflows/cmake.yml/badge.svg)](https://github.com/rpautrat/homography_est/actions/workflows/cmake.yml)
+
 Light-weight Python bindings to perform homography estimation between two images with RANSAC from point, line or point-line correspondences.
 Based on [RansacLib](https://github.com/tsattler/RansacLib) and developed by [Iago Suarez](https://github.com/iago-suarez), [Viktor Larsson](https://github.com/vlarsson), and [Rémi Pautrat](https://github.com/rpautrat).
 
