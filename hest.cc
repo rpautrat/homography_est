@@ -221,13 +221,13 @@ void refineHomography(
             ceres::CostFunction *cost_function = RotationLineCost::Create(line_segments1[k], line_segments2[k]);
             problem.AddResidualBlock(cost_function, nullptr, q.coeffs().data());            
         }
-        problem.SetParameterization(q.coeffs().data(), new ceres::EigenQuaternionParameterization());
+        problem.SetManifold(q.coeffs().data(), new ceres::EigenQuaternionManifold());
     } else {
         for(size_t k = 0; k < line_segments1.size(); ++k) {
             ceres::CostFunction *cost_function = HomographyLineCost::Create(line_segments1[k], line_segments2[k]);
             problem.AddResidualBlock(cost_function, nullptr, homography.data());            
         }
-        problem.SetParameterization(homography.data(), new ceres::HomogeneousVectorParameterization(9));
+        problem.SetManifold(homography.data(), new ceres::SphereManifold<9>());
     }
     ceres::Solver::Options options;
     options.minimizer_progress_to_stdout = false;
@@ -262,13 +262,13 @@ void refineHomography(
             ceres::CostFunction *cost_function = RotationPointCost::Create(pts1[k], pts2[k]);
             problem.AddResidualBlock(cost_function, nullptr, q.coeffs().data());            
         }
-        problem.SetParameterization(q.coeffs().data(), new ceres::EigenQuaternionParameterization());
+        problem.SetManifold(q.coeffs().data(), new ceres::EigenQuaternionManifold());
     } else {
         for(size_t k = 0; k < pts1.size(); ++k) {
             ceres::CostFunction *cost_function = HomographyPointCost::Create(pts1[k], pts2[k]);
             problem.AddResidualBlock(cost_function, nullptr, homography.data());            
         }
-        problem.SetParameterization(homography.data(), new ceres::HomogeneousVectorParameterization(9));
+        problem.SetManifold(homography.data(), new ceres::SphereManifold<9>());
     }
 
     ceres::Solver::Options options;
@@ -311,7 +311,7 @@ void refineHomography(
             ceres::CostFunction *cost_function = RotationLineCost::Create(line_segments1[k], line_segments2[k]);
             problem.AddResidualBlock(cost_function, nullptr, q.coeffs().data());            
         }
-        problem.SetParameterization(q.coeffs().data(), new ceres::EigenQuaternionParameterization());
+        problem.SetManifold(q.coeffs().data(), new ceres::EigenQuaternionManifold());
     } else {
         for(size_t k = 0; k < pts1.size(); ++k) {
             ceres::CostFunction *cost_function = HomographyPointCost::Create(pts1[k], pts2[k]);
@@ -321,7 +321,7 @@ void refineHomography(
             ceres::CostFunction *cost_function = HomographyLineCost::Create(line_segments1[k], line_segments1[k]);
             problem.AddResidualBlock(cost_function, nullptr, homography.data());            
         }
-        problem.SetParameterization(homography.data(), new ceres::HomogeneousVectorParameterization(9));
+        problem.SetManifold(homography.data(), new ceres::SphereManifold<9>());
     }
     ceres::Solver::Options options;
     options.minimizer_progress_to_stdout = false;
