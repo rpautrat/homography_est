@@ -3,6 +3,11 @@ Light-weight Python bindings to perform homography estimation between two images
 Based on [RansacLib](https://github.com/tsattler/RansacLib) and developed by [Iago Suarez](https://github.com/iago-suarez), [Viktor Larsson](https://github.com/vlarsson), and [Rémi Pautrat](https://github.com/rpautrat).
 
 ## Installation
+This work relies on the following dependencies:
+- [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page)
+- [Ceres Solver 2.0](http://ceres-solver.org/)
+
+After installing these two dependencies, you can clone and install the homography estimation code:
 ```
 git clone --recurse-submodules git@github.com:rpautrat/homography_est.git
 cd homography_est
