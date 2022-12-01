@@ -274,13 +274,13 @@ void refineHomography(
             problem.AddResidualBlock(cost_function, nullptr, q.coeffs().data());
         }
         SET_PARAMETRIZATION(problem, q.coeffs().data(), NEW_ROT_PARAMETRIZATION);
-      } else {
+    } else {
         for(size_t k = 0; k < pts1.size(); ++k) {
             ceres::CostFunction *cost_function = HomographyPointCost::Create(pts1[k], pts2[k]);
             problem.AddResidualBlock(cost_function, nullptr, homography.data());
         }
         SET_PARAMETRIZATION(problem, homography.data(), NEW_HEST_PARAMETRIZATION);
-      }
+    }
 
     ceres::Solver::Options options;
     options.minimizer_progress_to_stdout = false;
