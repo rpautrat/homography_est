@@ -318,7 +318,7 @@ void refineHomography(
             problem.AddResidualBlock(cost_function, nullptr, homography.data());            
         }
         for(size_t k = 0; k < line_segments1.size(); ++k) {
-            ceres::CostFunction *cost_function = HomographyLineCost::Create(line_segments1[k], line_segments1[k]);
+            ceres::CostFunction *cost_function = HomographyLineCost::Create(line_segments1[k], line_segments2[k]);
             problem.AddResidualBlock(cost_function, nullptr, homography.data());            
         }
         problem.SetParameterization(homography.data(), new ceres::HomogeneousVectorParameterization(9));
