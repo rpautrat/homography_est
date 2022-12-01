@@ -3,7 +3,7 @@
 #include <random>
 #include "hest.h"
 #include "Estimators.h"
-#include <opencv2/opencv.hpp>
+//#include <opencv2/opencv.hpp>
 
 static const std::vector<Eigen::Vector2d> EXAMPLE_SIMPLE_PTS1 = {
     {-0.3, -0.3},
