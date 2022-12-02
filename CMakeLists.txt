@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.11)
 
 project(homography_est)
 
@@ -18,7 +18,9 @@ add_subdirectory(pybind11)
 pybind11_add_module(homography_est python_interface.cc hest.cc Estimators.cc)
 target_link_libraries(homography_est PRIVATE Eigen3::Eigen ${CERES_LIBRARIES})
 
-cmake_policy(SET CMP0135 OLD)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.24.0)
+    cmake_policy(SET CMP0135 OLD)
+endif()
 include(FetchContent)
 FetchContent_Declare(
   googletest
