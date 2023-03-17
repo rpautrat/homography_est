@@ -9,6 +9,10 @@ from setuptools.command.build_ext import build_ext
 from distutils.version import LooseVersion
 
 
+# Cores used for building the project
+N_CORES = 8
+
+
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
         Extension.__init__(self, name, sources=[])
@@ -57,7 +61,7 @@ class CMakeBuild(build_ext):
             os.makedirs(self.build_temp)
         print(['cmake', ext.sourcedir] + cmake_args)
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
-        subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
+        subprocess.check_call(['cmake', '--build', '.', "--parallel {0}".format(N_CORES)] + build_args, cwd=self.build_temp)
 
 setup(
     name='homography_est',
@@ -70,45 +74,3 @@ setup(
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
 )
-
-# from setuptools import setup
-# from glob import glob
-
-# # Available at setup time due to pyproject.toml
-# from pybind11.setup_helpers import Pybind11Extension, build_ext
-# # from pybind11 import get_cmake_dir
-
-# __version__ = "0.0.0"
-
-# The main interface is through Pybind11Extension.
-# * You can add cxx_std=11/14/17, and then build_ext can be removed.
-# * You can set include_pybind11=false to add the include directory yourself,
-#   say from a submodule.
-#
-# Note:
-#   Sort input source files if you glob sources to ensure bit-for-bit
-#   reproducible builds (https://github.com/pybind/python_example/pull/53)
-
-# ext_modules = [
-#     Pybind11Extension("homography_est",
-#         sorted(glob("./*.cc")),
-#         # ["python_interface.cc"],
-#         # Example: passing in the version to the compiled code
-#         define_macros = [('VERSION_INFO', __version__)],
-#         ),
-# ]
-
-# setup(
-#     name="homography_est",
-#     version=__version__,
-#     author="Viktor Larsson, Rémi Pautrat",
-#     author_email="remi.pautrat@inf.ethz.ch",
-#     description="Line homography estimation bindings",
-#     long_description="",
-#     ext_modules=ext_modules,
-#     # extras_require={"test": "pytest"},
-#     # Currently, build_ext only provides an optional "highest supported C++
-#     # level" feature, but in the future it may provide more features.
-#     cmdclass={"build_ext": build_ext},
-#     zip_safe=False,
-# )
