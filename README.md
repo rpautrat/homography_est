@@ -6,8 +6,8 @@ Based on [RansacLib](https://github.com/tsattler/RansacLib) and developed by [Ia
 
 ## Installation
 This work relies on the following dependencies:
-- [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page)
-- [Ceres Solver](http://ceres-solver.org/)
+- [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page) (3.4.0)
+- [Ceres Solver](http://ceres-solver.org/) (2.0.0)
 
 After installing these two dependencies, you can clone and install the homography estimation code:
 ```
