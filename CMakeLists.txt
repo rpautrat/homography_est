@@ -37,3 +37,7 @@ file(GLOB TEST_SOURCES "tests/*.cpp" "tests/*.cc")
 add_executable(all_tests hest.cc Estimators.cc ${TEST_SOURCES})
 include_directories(${OpenCV_INCLUDE_DIRS})
 target_link_libraries( all_tests PRIVATE Eigen3::Eigen ${CERES_LIBRARIES} GTest::gtest_main)
+
+add_executable(run_hest_test hest.cc Estimators.cc run_hest_test.cc)
+include_directories(${OpenCV_INCLUDE_DIRS})
+target_link_libraries(run_hest_test PRIVATE Eigen3::Eigen ${CERES_LIBRARIES})

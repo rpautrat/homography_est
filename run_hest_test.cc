@@ -54,7 +54,7 @@ Instance generateInstance(const ProblemOptions &options) {
         c.y() += options.corner_noise * gaussian_noise_gen(rng);
     }
 
-    instance.homography_gt = hest::estimateHomographyPoints(instance.corners1, instance.corners2);
+    instance.homography_gt = hest::estimateHomographyPoints(instance.corners1, instance.corners2, false);
 
     instance.endpoints1.resize(options.n_lines);
     instance.endpoints2.resize(options.n_lines);
@@ -105,7 +105,7 @@ int main() {
 
     double tol_px = 5.0;
     std::vector<int> inliers;
-    Eigen::Matrix3d H = hest::ransacHomography(instance.endpoints1, instance.endpoints2, tol_px, &inliers);
+    Eigen::Matrix3d H = hest::ransacLineHomography(instance.endpoints1, instance.endpoints2, tol_px, false, &inliers);
 
     std::cout << " Found homography with " << inliers.size() << " / " << opt.n_lines << " inliers\n";
     
